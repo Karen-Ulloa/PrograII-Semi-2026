@@ -52,101 +52,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/lblNum2" />
 
-    <RadioGroup
+    <Spinner
         android:id="@+id/optOpciones"
-        android:layout_width="190dp"
-        android:layout_height="357dp"
+        android:entries="@array/opciones"
+        android:layout_width="339dp"
+        android:layout_height="35dp"
         app:layout_constraintBottom_toTopOf="@+id/btnCalcular"
         app:layout_constraintTop_toBottomOf="@+id/txtNum2"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="28dp">
-
-        <RadioButton
-            android:id="@+id/optSuma"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="SUMA">
-
-        </RadioButton>
-
-        <RadioButton
-            android:id="@+id/optResta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RESTAR">
-
-        </RadioButton>
-
-        <RadioButton
-            android:id="@+id/optMultiplicar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MULTIPLICACION">
-
-        </RadioButton>
-
-        <RadioButton
-            android:id="@+id/optDividir"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DIVISION">
-
-        </RadioButton>
-
-        <RadioButton
-            android:id="@+id/optFactorial"
-            android:layout_width="wrap_content"
-            android:layout_height="23dp"
-            android:text="FACTORIAL">
-
-        </RadioButton>
-
-        <RadioButton
-            android:id="@+id/optPotencia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="EXPONENCIACION">
-
-        </RadioButton>
-
-        <RadioButton
-            android:id="@+id/optPorcentaje"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PORCENTAJE">
-
-        </RadioButton>
-
-        <RadioButton
-            android:id="@+id/optRaiz"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RAIZ">
-
-        </RadioButton>
-    </RadioGroup>
+        app:layout_constraintVertical_bias="0.259"
+        tools:layout_editor_absoluteX="40dp" />
 
     <Button
         android:id="@+id/btnCalcular"
         android:layout_width="127dp"
         android:layout_height="47dp"
-        android:layout_margin="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="28dp"
         android:text="CALCULAR"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.927"
+        app:layout_constraintHorizontal_bias="0.552"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lblRespuesta" />
+        app:layout_constraintTop_toBottomOf="@+id/lblRespuesta" />
 
     <TextView
         android:id="@+id/lblRespuesta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="240dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="76dp"
         android:text="Respuesta:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtNum2" />
+        app:layout_constraintTop_toBottomOf="@id/txtNum2"
+        tools:layout_editor_absoluteX="40dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
