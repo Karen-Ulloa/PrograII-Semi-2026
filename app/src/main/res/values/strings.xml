@@ -2,9 +2,11 @@
     <string name="app_name">Conversores</string>
     <string-array name="tipo">
         <item>Monedas</item>
-        <item>Longitud</item>
-        <item>Volumen</item>
         <item>Masa</item>
+        <item>Volumen</item>
+        <item>Longitud</item>
         <item>Almacenamiento</item>
+        <item>Tiempo</item>
+        <item>Transferencia de Datos</item>
     </string-array>
 </resources>

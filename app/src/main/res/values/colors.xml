@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="Mi_color_boton">#4CAF50</color>
+    <color name="Fondo_suave">#F0F4F7</color>
 </resources>
