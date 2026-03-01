@@ -1,5 +1,10 @@
 package com.example.miprimeraapp;
 
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -15,43 +20,57 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
     TextView tempVal;
-    Button btn;
-    Spinner spn;
+    SensorManager sensorManager;
+    Sensor sensor;
+    SensorEventListener sensorEventListener;
+
+    @Override
+    protected void onPause() {
+        detener();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        iniciar();
+        super.onResume();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        btn = findViewById(R.id.btnCalcular);
-        btn.setOnClickListener(v->calcular());
+        sensorProximidad();
     }
-    private void calcular(){
-        tempVal = findViewById(R.id.txtNum1);
-        Double num1 = Double.parseDouble(tempVal.getText().toString());
-
-        tempVal = findViewById(R.id.txtNum2);
-        Double num2 = Double.parseDouble(tempVal.getText().toString());
-
-        double respuesta = 0;
-
-        spn = findViewById(R.id.optOpciones);
-        switch(spn.getSelectedItemPosition()){
-            case 0: //Suma
-                respuesta = num1 + num2;
-                break;
-            case 1: //Resta
-                respuesta = num1 - num2;
-                break;
-            case 2: //Multiplicacion
-                respuesta = num1 * num2;
-                break;
-            case 3: //División
-                respuesta = num1 / num2;
-                break;
-        }
-
-
-            tempVal = findViewById(R.id.lblRespuesta);
-            tempVal.setText("Respuesta: " + respuesta);
-        }
+    private void iniciar(){
+        sensorManager.registerListener(sensorEventListener, sensor, 2000*1000);
     }
+    private void detener(){
+        sensorManager.unregisterListener(sensorEventListener);
+    }
+    private void sensorProximidad(){
+        tempVal = findViewById(R.id.lblSensorProximidad);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        if(sensor==null){
+            tempVal.setText("No dispones del sensor de proximidad");
+            finish();
+        }
+        sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                double valor = sensorEvent.values[0];
+                tempVal.setText("Prxomidad: "+ valor);
+                int color = Color.BLACK;
+                if(valor<=4){
+                    color = Color.WHITE;
+                }
+                getWindow().getDecorView().setBackgroundColor(color);
+            }
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        };
+    }
+}
