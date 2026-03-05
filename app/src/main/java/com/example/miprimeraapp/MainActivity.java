@@ -1,12 +1,15 @@
 package com.example.miprimeraapp;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,63 +19,147 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    TabHost tbh;
-    TextView tempVal;
-    Spinner spn;
-    Button btn;
-    Double valores[] = new Double[] {1.0, 0.85, 7.67, 26.42, 36.80, 495.77};
-    Double longitudes[] = new Double[] {1.0, 1000.0, 100.0, 39.3701, 3.280841666667, 1.1963081929167, 1.09361};
+    TextView txtCantidad, lblRespuesta;
+    Spinner spnDe, spnA;
+    Button btnConvertir;
+
+
+    Double valores[][] = {
+
+            {1.0, 10.7639, 1.4311, 1.19599, 0.00159033, 0.0001431, 1e-4}
+    };
+
+    String[][] etiquetas = {
+            {"Metro Cuadrado", "Pie Cuadrado", "Vara Cuadrada", "Yarda Cuadrada", "Tarea", "Manzana", "Hectárea"}
+    };
+
+
+    EditText etMetros;
+    Button btnCalcular;
+    TextView tvResultadoAgua;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tbh = findViewById(R.id.tbhConversores);
-        tbh.setup();
-
-        tbh.addTab(tbh.newTabSpec("Monedas").setContent(R.id.tabMonedas).setIndicator("", getDrawable(R.drawable.moneda)));
-        tbh.addTab(tbh.newTabSpec("Longitud").setContent(R.id.tabLongitud).setIndicator("", getResources().getDrawable(R.drawable.longitud)));
-        tbh.addTab(tbh.newTabSpec("Volumen").setContent(R.id.tabVolumen).setIndicator("", getDrawable(R.drawable.volumen)));
-        tbh.addTab(tbh.newTabSpec("Masa").setContent(R.id.tabMasa).setIndicator("", getDrawable(R.drawable.masa)));
-
-        btn = findViewById(R.id.btnMonedasConvertir);
-        btn.setOnClickListener(v->convertirMonedas());
-
-        btn = findViewById(R.id.btnLongitudConvertir);
-        btn.setOnClickListener(v->convertirLongitud());
+        configurarTabs();
+        configurarAgua();
+        configurarConversor();
     }
-    private void convertirLongitud(){
-        spn = findViewById(R.id.spnLongitudDe);
-        int de = spn.getSelectedItemPosition();
 
-        spn = findViewById(R.id.spnLongitudA);
-        int a = spn.getSelectedItemPosition();
 
-        tempVal = findViewById(R.id.txtLongitudCantidad);
-        double cantidad = Double.parseDouble(tempVal.getText().toString());
-        double respuesta = conversorLongitud(de, a, cantidad);
+    private void configurarTabs() {
 
-        tempVal = findViewById(R.id.lblLongitudRespuesta);
-        tempVal.setText("Respuesta: "+ respuesta);
+        TabHost tabHost = findViewById(android.R.id.tabhost);
+        tabHost.setup();
+
+        TabHost.TabSpec spec;
+
+        spec = tabHost.newTabSpec("Tab1");
+        spec.setContent(R.id.Calculo_de_agua);
+        spec.setIndicator("AGUA");
+        tabHost.addTab(spec);
+
+        spec = tabHost.newTabSpec("Tab2");
+        spec.setContent(R.id.Area);
+        spec.setIndicator("AREA");
+        tabHost.addTab(spec);
     }
-    private void convertirMonedas(){
-        spn = findViewById(R.id.spnMonedasDe);
-        int de = spn.getSelectedItemPosition();
 
-        spn = findViewById(R.id.spnMonedasA);
-        int a = spn.getSelectedItemPosition();
+    private void configurarAgua() {
 
-        tempVal = findViewById(R.id.txtMonedasCantidad);
-        double cantidad = Double.parseDouble(tempVal.getText().toString());
+        etMetros = findViewById(R.id.etMetros);
+        btnCalcular = findViewById(R.id.btnCalcular);
+        tvResultadoAgua = findViewById(R.id.tvResultado);
+
+        btnCalcular.setOnClickListener(v -> {
+
+            String texto = etMetros.getText().toString();
+
+            if (texto.isEmpty()) {
+                Toast.makeText(this, "Ingresa los metros consumidos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double metros;
+
+            try {
+                metros = Double.parseDouble(texto);
+            } catch (Exception e) {
+                Toast.makeText(this, "Número inválido", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double total;
+
+            if (metros <= 18) {
+                total = 6.0;
+            } else if (metros <= 28) {
+                total = 6 + ((metros - 18) * 0.45);
+            } else {
+                double tramo1 = 10 * 0.45;
+                double tramo2 = (metros - 28) * 0.65;
+                total = 6 + tramo1 + tramo2;
+            }
+
+            tvResultadoAgua.setText("RESULTADO: $" + String.format("%.2f", total));
+            Toast.makeText(this, "Cálculo realizado", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void configurarConversor() {
+
+        btnConvertir = findViewById(R.id.btnConvertir);
+        spnDe = findViewById(R.id.spnDe);
+        spnA = findViewById(R.id.spnA);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                etiquetas[0]
+        );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spnDe.setAdapter(adapter);
+        spnA.setAdapter(adapter);
+
+        btnConvertir.setOnClickListener(v -> convertir());
+    }
+
+    private void convertir() {
+
+        txtCantidad = findViewById(R.id.etArea);
+        String texto = txtCantidad.getText().toString();
+
+        if (texto.isEmpty()) {
+            Toast.makeText(this, "Ingresa una cantidad", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double cantidad;
+
+        try {
+            cantidad = Double.parseDouble(texto);
+        } catch (Exception e) {
+            Toast.makeText(this, "Número inválido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int de = spnDe.getSelectedItemPosition();
+        int a = spnA.getSelectedItemPosition();
+
         double respuesta = conversor(de, a, cantidad);
 
-        tempVal = findViewById(R.id.lblMonedasRespuesta);
-        tempVal.setText("Respuesta: "+ respuesta);
+        lblRespuesta = findViewById(R.id.tvResultadoArea);
+        lblRespuesta.setText("RESULTADO: " + respuesta);
+
+        Toast.makeText(this, "Conversión realizada", Toast.LENGTH_SHORT).show();
     }
-    double conversor(int de, int a, double cantidad){
-        return valores[a]/valores[de] * cantidad;
-    }
-    double conversorLongitud(int de, int a, double cantidad){
-        return longitudes[a]/longitudes[de] * cantidad;
+
+    private double conversor(int de, int a, double cantidad) {
+
+        return valores[0][a] / valores[0][de] * cantidad;
     }
 }
