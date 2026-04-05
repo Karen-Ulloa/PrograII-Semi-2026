@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Calculadora Basica</string>
+    <string name="app_name">Tienda de Zapatos</string>
     <string-array name="opciones">
         <item>Suma</item>
         <item>Resta</item>

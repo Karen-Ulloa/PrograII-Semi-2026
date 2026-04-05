@@ -1,0 +1,41 @@
+<!--suppress AndroidDomInspection -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkGray">
+
+    <EditText
+        android:id="@+id/txtBuscarAmigos"
+        android:hint="Buscar producto"
+        android:textColor="@color/white"
+        android:textColorHint="@color/grayText"
+        android:backgroundTint="@color/accent"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:layout_margin="15dp"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ListView
+        android:id="@+id/ltsAmigos"
+        android:layout_below="@id/txtBuscarAmigos"
+        android:layout_marginBottom="80dp"
+        android:divider="@color/grayText"
+        android:dividerHeight="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAgregarAmigos"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="20dp"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/accent"
+        android:tint="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
