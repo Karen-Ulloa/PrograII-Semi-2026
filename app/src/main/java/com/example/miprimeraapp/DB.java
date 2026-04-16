@@ -11,6 +11,10 @@ public class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME="amigos";
     private static final int DATABASE_VERSION=1;
     private static final String SQLdb = "CREATE TABLE amigos (idAmigo INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, direccion TEXT, telefono TEXT, email TEXT, dui TEXT, urlFoto TEXT)";
+
+    String couchUrl = "http://10.0.2.2:5984/amigos/_design/amigos/_view/amigos";
+
+    String url = "http://192.168.1.5:5984/amigos/_design/amigos/_view/amigos";
     public DB(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
