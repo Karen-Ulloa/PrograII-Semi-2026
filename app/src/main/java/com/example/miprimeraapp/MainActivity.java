@@ -1,14 +1,11 @@
 package com.example.miprimeraapp;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,26 +17,39 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import com.example.miprimeraapp.EnviarDatosServidor;
+import com.example.miprimeraapp.detectarInternet;
+import com.example.miprimeraapp.lista_producto;
+import com.example.miprimeraapp.utilidades;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends Activity {
 
     DB db;
-    Button btnGuardar;
-    TextView tempVal;
-    String accion = "nuevo", idProducto = "", urlFoto;
-    FloatingActionButton fabLista;
-    ImageView imgFoto;
 
-    private static final int PERMISSIONS_CODE = 100;
-    private static final int CAMERA_CODE = 1;
-    private static final int GALERIA_CODE = 2;
+    Button btnGuardar;
+    ImageView imgFoto;
+    FloatingActionButton fab;
+
+    String accion = "nuevo";
+    String idProducto = "";
+    String id = "";
+    String rev = "";
+    String urlFoto = "";
+
+    ArrayList<String> fotosTomadas = new ArrayList<>();
+
+    final int CAMERA_CODE = 1;
+    final int GALERIA_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,228 +59,610 @@ public class MainActivity extends Activity {
         db = new DB(this);
 
         imgFoto = findViewById(R.id.imgFotoAmigo);
-        imgFoto.setOnClickListener(v -> mostrarOpcionesFoto());
-
         btnGuardar = findViewById(R.id.btnGuardarAmigo);
-        btnGuardar.setOnClickListener(v -> guardarProductoConValidacion());
+        fab = findViewById(R.id.fabListaAmigo);
 
-        fabLista = findViewById(R.id.fabListaAmigo);
-        fabLista.setOnClickListener(v -> regresarLista());
+        imgFoto.setOnClickListener(v -> menuImagenes());
+        btnGuardar.setOnClickListener(v -> guardarProducto());
+        fab.setOnClickListener(v -> regresarLista());
 
-        pedirPermisos();
-        mostrarDatosProducto();
+        mostrarDatos();
     }
 
-    private void pedirPermisos() {
-        String[] permisos = {Manifest.permission.CAMERA,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.READ_MEDIA_IMAGES};
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            boolean faltan = false;
-            for (String p : permisos) {
-                if (checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
-                    faltan = true;
-                    break;
-                }
-            }
-            if (faltan) requestPermissions(permisos, PERMISSIONS_CODE);
-        }
-    }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSIONS_CODE) {
-            boolean todosAceptados = true;
-            for (int r : grantResults) if (r != PackageManager.PERMISSION_GRANTED) todosAceptados = false;
-            if (!todosAceptados)
-                Toast.makeText(this, "Permisos requeridos para usar la cámara y galería", Toast.LENGTH_LONG).show();
-        }
+    protected void onResume() {
+        super.onResume();
+        mostrarDatos();
     }
 
-    private void mostrarDatosProducto() {
-        try {
-            Bundle parametros = getIntent().getExtras();
-            if (parametros != null) {
-                accion = parametros.getString("accion", "nuevo");
-                if (accion.equals("modificar")) {
-                    JSONObject datos = new JSONObject(parametros.getString("amigos"));
-                    idProducto = datos.getString("idAmigo");
 
-                    tempVal = findViewById(R.id.txtcodigoAmigos);
-                    tempVal.setText(datos.getString("codigo"));
+    private void menuImagenes() {
 
-                    tempVal = findViewById(R.id.txtdescripcionAmigos);
-                    tempVal.setText(datos.getString("descripcion"));
+        String[] opciones = {
+                "Tomar nueva foto",
+                "Elegir de galería",
+                "Escoger foto tomada"
+        };
 
-                    tempVal = findViewById(R.id.txtmarcaAmigos);
-                    tempVal.setText(datos.getString("marca"));
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(this);
 
-                    tempVal = findViewById(R.id.txtpresentacionAmigos);
-                    tempVal.setText(datos.getString("presentacion"));
+        builder.setTitle("Imagen");
 
-                    tempVal = findViewById(R.id.txtprecioAmigos);
-                    tempVal.setText(datos.getString("precio"));
+        builder.setItems(opciones, (d, which) -> {
 
-                    urlFoto = datos.getString("foto");
-                    if (!urlFoto.isEmpty()) imgFoto.setImageBitmap(BitmapFactory.decodeFile(urlFoto));
-                }
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Error al mostrar datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    // 📸 Opciones foto: Cámara o Galería
-    private void mostrarOpcionesFoto() {
-        String[] opciones = {"Tomar foto", "Elegir de galería"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Selecciona una opción");
-        builder.setItems(opciones, (dialog, which) -> {
-            if (which == 0) abrirCamara();
+            if (which == 0) tomarFoto();
             if (which == 1) abrirGaleria();
+            if (which == 2) elegirFotoTomada();
+
         });
+
         builder.show();
     }
 
-    private void abrirCamara() {
-        Intent tomarFotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File fotoArchivo = null;
+
+    private void tomarFoto() {
 
         try {
-            fotoArchivo = crearArchivoFoto();
-            if (fotoArchivo != null) {
-                Uri uriFoto = FileProvider.getUriForFile(
-                        this,
-                        getApplicationContext().getPackageName() + ".fileprovider",
-                        fotoArchivo
-                );
-                tomarFotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriFoto);
-                startActivityForResult(tomarFotoIntent, CAMERA_CODE);
-            } else {
-                Toast.makeText(this, "No se pudo crear archivo foto", Toast.LENGTH_LONG).show();
-            }
+
+            Intent intent =
+                    new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            File archivo = crearArchivoFoto();
+
+            Uri uri = FileProvider.getUriForFile(
+                    this,
+                    getPackageName() + ".fileprovider",
+                    archivo
+            );
+
+            intent.putExtra(
+                    MediaStore.EXTRA_OUTPUT,
+                    uri
+            );
+
+            startActivityForResult(
+                    intent,
+                    CAMERA_CODE
+            );
+
         } catch (Exception e) {
-            Toast.makeText(this, "Error abrir cámara: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            mostrarMsg(e.getMessage());
         }
     }
 
-    private File crearArchivoFoto() throws Exception {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String nombreArchivo = "foto_" + timestamp;
-        File dirAlmacenamiento = getExternalFilesDir(Environment.DIRECTORY_DCIM);
-        if (!dirAlmacenamiento.exists()) dirAlmacenamiento.mkdir();
-        File imagen = File.createTempFile(nombreArchivo, ".jpg", dirAlmacenamiento);
-        urlFoto = imagen.getAbsolutePath();
-        return imagen;
+    private File crearArchivoFoto()
+            throws Exception {
+
+        String fecha =
+                new SimpleDateFormat(
+                        "yyyyMMdd_HHmmss"
+                ).format(new Date());
+
+        File carpeta =
+                getExternalFilesDir(
+                        Environment.DIRECTORY_DCIM
+                );
+
+        if (carpeta != null &&
+                !carpeta.exists()) {
+
+            carpeta.mkdirs();
+        }
+
+        File archivo =
+                File.createTempFile(
+                        "IMG_" + fecha,
+                        ".jpg",
+                        carpeta
+                );
+
+        urlFoto =
+                archivo.getAbsolutePath();
+
+        return archivo;
     }
+
 
     private void abrirGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+
+        Intent intent =
+                new Intent(
+                        Intent.ACTION_OPEN_DOCUMENT
+                );
+
+        intent.addCategory(
+                Intent.CATEGORY_OPENABLE
+        );
+
         intent.setType("image/*");
-        startActivityForResult(intent, GALERIA_CODE);
+
+        intent.addFlags(
+                Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+        );
+
+        startActivityForResult(
+                intent,
+                GALERIA_CODE
+        );
     }
+
+
+    private void elegirFotoTomada() {
+
+        if (fotosTomadas.size() == 0) {
+            mostrarMsg("No hay fotos");
+            return;
+        }
+
+        String[] lista =
+                new String[fotosTomadas.size()];
+
+        for (int i = 0;
+             i < fotosTomadas.size();
+             i++) {
+
+            lista[i] =
+                    "Foto " + (i + 1);
+        }
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(this);
+
+        builder.setTitle("Escoger");
+
+        builder.setItems(lista, (d, which) -> {
+
+            urlFoto =
+                    fotosTomadas.get(which);
+
+            imgFoto.setImageBitmap(
+                    BitmapFactory.decodeFile(
+                            urlFoto
+                    )
+            );
+        });
+
+        builder.show();
+    }
+
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            @Nullable Intent data
+    ) {
+        super.onActivityResult(
+                requestCode,
+                resultCode,
+                data
+        );
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_CODE) {
-                imgFoto.setImageBitmap(BitmapFactory.decodeFile(urlFoto));
-            } else if (requestCode == GALERIA_CODE) {
-                if (data != null && data.getData() != null) {
-                    Uri selectedImage = data.getData();
-                    imgFoto.setImageURI(selectedImage);
-                    urlFoto = getRealPathFromURI(selectedImage);
+        try {
+
+            if (resultCode == RESULT_OK) {
+
+                if (requestCode ==
+                        CAMERA_CODE) {
+
+                    fotosTomadas.add(urlFoto);
+
+                    imgFoto.setImageBitmap(
+                            BitmapFactory.decodeFile(
+                                    urlFoto
+                            )
+                    );
+                }
+
+                if (requestCode ==
+                        GALERIA_CODE &&
+                        data != null) {
+
+                    Uri uri =
+                            data.getData();
+
+                    if (uri != null) {
+
+                        getContentResolver()
+                                .takePersistableUriPermission(
+                                        uri,
+                                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                );
+
+                        urlFoto =
+                                guardarImagenGaleria(
+                                        uri
+                                );
+
+                        imgFoto.setImageBitmap(
+                                BitmapFactory.decodeFile(
+                                        urlFoto
+                                )
+                        );
+                    }
                 }
             }
-        } else {
-            Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_LONG).show();
-        }
-    }
 
-    private String getRealPathFromURI(Uri uri) {
-        String path = "";
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = getContentResolver().query(uri, proj, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                path = cursor.getString(column_index);
-            }
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) cursor.close();
+            mostrarMsg(e.getMessage());
         }
-        return path;
     }
 
-    // 🔹 Guardar producto con validación
-    private void guardarProductoConValidacion() {
-        tempVal = findViewById(R.id.txtcodigoAmigos);
-        String codigo = tempVal.getText().toString().trim();
+    private String guardarImagenGaleria(
+            Uri uri
+    ) {
+        try {
 
-        tempVal = findViewById(R.id.txtdescripcionAmigos);
-        String descripcion = tempVal.getText().toString().trim();
+            InputStream input =
+                    getContentResolver()
+                            .openInputStream(uri);
 
-        tempVal = findViewById(R.id.txtmarcaAmigos);
-        String marca = tempVal.getText().toString().trim();
+            Bitmap bitmap =
+                    BitmapFactory.decodeStream(
+                            input
+                    );
 
-        tempVal = findViewById(R.id.txtpresentacionAmigos);
-        String presentacion = tempVal.getText().toString().trim();
+            if (input != null)
+                input.close();
 
-        tempVal = findViewById(R.id.txtprecioAmigos);
-        String precio = tempVal.getText().toString().trim();
+            File archivo =
+                    new File(
+                            getExternalFilesDir(
+                                    Environment.DIRECTORY_DCIM
+                            ),
+                            "GAL_" +
+                                    System.currentTimeMillis() +
+                                    ".jpg"
+                    );
 
-        // ✅ Validación de campos
-        if (codigo.isEmpty()) {
-            tempVal.requestFocus();
-            tempVal.setError("Ingrese el código");
-            return;
+            FileOutputStream output =
+                    new FileOutputStream(
+                            archivo
+                    );
+
+            bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    85,
+                    output
+            );
+
+            output.flush();
+            output.close();
+
+            return archivo
+                    .getAbsolutePath();
+
+        } catch (Exception e) {
+            return "";
         }
-        if (descripcion.isEmpty()) {
-            tempVal = findViewById(R.id.txtdescripcionAmigos);
-            tempVal.requestFocus();
-            tempVal.setError("Ingrese la descripción");
-            return;
-        }
-        if (marca.isEmpty()) {
-            tempVal = findViewById(R.id.txtmarcaAmigos);
-            tempVal.requestFocus();
-            tempVal.setError("Ingrese la marca");
-            return;
-        }
-        if (presentacion.isEmpty()) {
-            tempVal = findViewById(R.id.txtpresentacionAmigos);
-            tempVal.requestFocus();
-            tempVal.setError("Ingrese la presentación");
-            return;
-        }
-        if (precio.isEmpty()) {
-            tempVal = findViewById(R.id.txtprecioAmigos);
-            tempVal.requestFocus();
-            tempVal.setError("Ingrese el precio");
-            return;
-        }
-        if (urlFoto == null || urlFoto.isEmpty()) {
-            Toast.makeText(this, "Seleccione una imagen para el producto", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        String[] datos = {idProducto, codigo, descripcion, marca, presentacion, precio, urlFoto};
-        db.administrar_amigos(accion, datos);
-        Toast.makeText(this, "Producto guardado con éxito", Toast.LENGTH_LONG).show();
-
-        regresarLista();
     }
 
+
+    private void mostrarDatos() {
+
+        try {
+
+            Bundle b =
+                    getIntent().getExtras();
+
+            if (b == null)
+                return;
+
+            accion =
+                    b.getString(
+                            "accion",
+                            "nuevo"
+                    );
+
+            if (accion.equals(
+                    "modificar"
+            )) {
+
+                JSONObject datos =
+                        new JSONObject(
+                                b.getString(
+                                        "producto"
+                                )
+                        );
+
+                id =
+                        datos.optString(
+                                "_id",
+                                ""
+                        );
+
+                rev =
+                        datos.optString(
+                                "_rev",
+                                ""
+                        );
+
+                idProducto =
+                        datos.optString(
+                                "idProducto",
+                                ""
+                        );
+
+                ((TextView)findViewById(
+                        R.id.txtcodigoAmigos))
+                        .setText(
+                                datos.optString(
+                                        "codigo",
+                                        ""
+                                ));
+
+                ((TextView)findViewById(
+                        R.id.txtdescripcionAmigos))
+                        .setText(
+                                datos.optString(
+                                        "descripcion",
+                                        ""
+                                ));
+
+                ((TextView)findViewById(
+                        R.id.txtmarcaAmigos))
+                        .setText(
+                                datos.optString(
+                                        "marca",
+                                        ""
+                                ));
+
+                ((TextView)findViewById(
+                        R.id.txtpresentacionAmigos))
+                        .setText(
+                                datos.optString(
+                                        "presentacion",
+                                        ""
+                                ));
+
+                ((TextView)findViewById(
+                        R.id.txtprecioAmigos))
+                        .setText(
+                                datos.optString(
+                                        "precio",
+                                        ""
+                                ));
+
+                urlFoto =
+                        datos.optString(
+                                "foto",
+                                ""
+                        );
+
+                File archivo =
+                        new File(urlFoto);
+
+                if (archivo.exists()) {
+
+                    imgFoto.setImageBitmap(
+                            BitmapFactory.decodeFile(
+                                    urlFoto
+                            )
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+            mostrarMsg("Error datos");
+        }
+    }
+
+
+    private void guardarProducto() {
+
+        try {
+
+            String codigo =
+                    ((TextView)findViewById(
+                            R.id.txtcodigoAmigos))
+                            .getText()
+                            .toString()
+                            .trim();
+
+            String descripcion =
+                    ((TextView)findViewById(
+                            R.id.txtdescripcionAmigos))
+                            .getText()
+                            .toString()
+                            .trim();
+
+            String marca =
+                    ((TextView)findViewById(
+                            R.id.txtmarcaAmigos))
+                            .getText()
+                            .toString()
+                            .trim();
+
+            String presentacion =
+                    ((TextView)findViewById(
+                            R.id.txtpresentacionAmigos))
+                            .getText()
+                            .toString()
+                            .trim();
+
+            String precio =
+                    ((TextView)findViewById(
+                            R.id.txtprecioAmigos))
+                            .getText()
+                            .toString()
+                            .trim();
+
+            if (codigo.isEmpty() ||
+                    descripcion.isEmpty() ||
+                    marca.isEmpty() ||
+                    presentacion.isEmpty() ||
+                    precio.isEmpty()) {
+
+                mostrarMsg(
+                        "Complete campos"
+                );
+                return;
+            }
+
+            if (urlFoto.isEmpty()) {
+                mostrarMsg(
+                        "Seleccione imagen"
+                );
+                return;
+            }
+
+            detectarInternet di =
+                    new detectarInternet(this);
+
+            //==========================================
+            // SIN INTERNET -> SQLITE
+            //==========================================
+            if (!di.hayConexionInternet()) {
+
+                String[] datos = {
+                        idProducto,
+                        codigo,
+                        descripcion,
+                        marca,
+                        presentacion,
+                        precio,
+                        urlFoto
+                };
+
+                db.administrar_amigos(
+                        accion,
+                        datos
+                );
+
+                mostrarMsg(
+                        "Guardado en SQLite"
+                );
+
+                regresarLista();
+                return;
+            }
+
+            //==========================================
+            // CON INTERNET -> COUCHDB
+            //==========================================
+            JSONObject json =
+                    new JSONObject();
+
+            if (accion.equals(
+                    "modificar"
+            )) {
+
+                json.put("_id", id);
+                json.put("_rev", rev);
+            }
+
+            if (idProducto.equals("")) {
+
+                idProducto =
+                        String.valueOf(
+                                System.currentTimeMillis()
+                        );
+            }
+
+            json.put(
+                    "idProducto",
+                    idProducto
+            );
+
+            json.put(
+                    "codigo",
+                    codigo
+            );
+
+            json.put(
+                    "descripcion",
+                    descripcion
+            );
+
+            json.put(
+                    "marca",
+                    marca
+            );
+
+            json.put(
+                    "presentacion",
+                    presentacion
+            );
+
+            json.put(
+                    "precio",
+                    precio
+            );
+
+            json.put(
+                    "foto",
+                    urlFoto
+            );
+
+            EnviarDatosServidor enviar =
+                    new EnviarDatosServidor(
+                            this
+                    );
+
+            String respuesta =
+                    enviar.execute(
+                            json.toString(),
+                            "POST",
+                            utilidades.url_mto
+                    ).get();
+
+            JSONObject resp =
+                    new JSONObject(
+                            respuesta
+                    );
+
+            if (resp.has("id")) {
+                id =
+                        resp.getString(
+                                "id"
+                        );
+            }
+
+            if (resp.has("rev")) {
+                rev =
+                        resp.getString(
+                                "rev"
+                        );
+            }
+
+            mostrarMsg(
+                    "Guardado en CouchDB"
+            );
+
+            regresarLista();
+
+        } catch (Exception e) {
+
+            mostrarMsg(
+                    "Error: " +
+                            e.getMessage()
+            );
+        }
+    }
+
+    //==================================================
     private void regresarLista() {
-        Intent intent = new Intent(this, lista_producto.class);
-        startActivity(intent);
+
+        Intent i =
+                new Intent(
+                        this,
+                        lista_producto.class
+                );
+
+        startActivity(i);
         finish();
+    }
+
+    private void mostrarMsg(
+            String msg
+    ) {
+        Toast.makeText(
+                this,
+                msg,
+                Toast.LENGTH_LONG
+        ).show();
     }
 }

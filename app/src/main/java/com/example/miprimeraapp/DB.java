@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 public class DB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "producto";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String SQLdb =
             "CREATE TABLE producto (" +
@@ -19,7 +19,9 @@ public class DB extends SQLiteOpenHelper {
                     "descripcion TEXT, " +
                     "marca TEXT, " +
                     "presentacion TEXT, " +
-                    "precio TEXT, " +
+                    "costo REAL, " +
+                    "precio REAL, " +
+                    "stock INTEGER, " +
                     "urlFoto TEXT)";
 
     public DB(@Nullable Context context) {
@@ -33,7 +35,6 @@ public class DB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Ejemplo básico:
         db.execSQL("DROP TABLE IF EXISTS producto");
         onCreate(db);
     }
@@ -45,27 +46,43 @@ public class DB extends SQLiteOpenHelper {
             String sql = "";
 
             switch (accion){
+
+
                 case "nuevo":
-                    sql = "INSERT INTO producto (codigo, descripcion, marca, presentacion, precio, urlFoto) VALUES (" +
+
+                    double costo = Double.parseDouble(datos[5]);
+                    double precio = costo * 1.40;
+
+                    sql = "INSERT INTO producto (codigo, descripcion, marca, presentacion, costo, precio, stock, urlFoto) VALUES (" +
                             "'" + datos[1] + "'," +
                             "'" + datos[2] + "'," +
                             "'" + datos[3] + "'," +
                             "'" + datos[4] + "'," +
-                            "'" + datos[5] + "'," +
-                            "'" + datos[6] + "'" +
+                            costo + "," +
+                            precio + "," +
+                            datos[6] + "," +
+                            "'" + datos[7] + "'" +
                             ")";
                     break;
 
+
                 case "modificar":
+
+                    double costoM = Double.parseDouble(datos[5]);
+                    double precioM = costoM * 1.40;
+
                     sql = "UPDATE producto SET " +
                             "codigo='" + datos[1] + "', " +
                             "descripcion='" + datos[2] + "', " +
                             "marca='" + datos[3] + "', " +
                             "presentacion='" + datos[4] + "', " +
-                            "precio='" + datos[5] + "', " +
-                            "urlFoto='" + datos[6] + "' " +
+                            "costo=" + costoM + ", " +
+                            "precio=" + precioM + ", " +
+                            "stock=" + datos[6] + ", " +
+                            "urlFoto='" + datos[7] + "' " +
                             "WHERE idAmigo='" + datos[0] + "'";
                     break;
+
 
                 case "eliminar":
                     sql = "DELETE FROM producto WHERE idAmigo='" + datos[0] + "'";
