@@ -1,51 +1,103 @@
-<!--suppress ALL -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="#1E1E1E">
 
+    <!-- Foto circular del producto -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardImagen"
         android:layout_width="70dp"
         android:layout_height="70dp"
         app:cardCornerRadius="50dp"
-        app:cardBackgroundColor="@color/darkGray">
+        app:cardBackgroundColor="#333333">
 
         <ImageView
             android:id="@+id/imgFotoAdaptador"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
+
     </androidx.cardview.widget.CardView>
 
+    <!-- Código -->
     <TextView
         android:id="@+id/lblcodigoAdaptador"
         android:layout_toEndOf="@id/cardImagen"
         android:layout_marginStart="10dp"
-        android:textColor="@color/white"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
+        android:textSize="13sp"
         android:text="Código"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- Descripción -->
     <TextView
         android:id="@+id/lbldescripcionAdaptador"
         android:layout_below="@id/lblcodigoAdaptador"
         android:layout_toEndOf="@id/cardImagen"
         android:layout_marginStart="10dp"
-        android:textColor="@color/grayText"
+        android:textColor="#90CAF9"
+        android:textSize="12sp"
         android:text="Descripción"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- Marca -->
     <TextView
         android:id="@+id/lblmarcaAdaptador"
         android:layout_below="@id/lbldescripcionAdaptador"
         android:layout_toEndOf="@id/cardImagen"
         android:layout_marginStart="10dp"
-        android:textColor="@color/grayText"
+        android:textColor="#90CAF9"
+        android:textSize="11sp"
         android:text="Marca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Precio (arriba a la derecha) -->
+    <TextView
+        android:id="@+id/lblPrecioAdaptador"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="2dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:text="$0.00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/lblCostoAdaptador"
+        android:layout_below="@id/lblPrecioAdaptador"
+        android:layout_alignParentEnd="true"
+        android:textColor="#90CAF9"
+        android:textSize="12sp"
+        android:text="Costo: $0.00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Ganancia % (debajo del costo) -->
+    <TextView
+        android:id="@+id/lblGananciaAdaptador"
+        android:layout_below="@id/lblCostoAdaptador"
+        android:layout_alignParentEnd="true"
+        android:textColor="#90CAF9"
+        android:textSize="12sp"
+        android:text="Ganancia: 0%"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Stock (debajo de ganancia) -->
+    <TextView
+        android:id="@+id/lblStockAdaptador"
+        android:layout_below="@id/lblGananciaAdaptador"
+        android:layout_alignParentEnd="true"
+        android:textColor="#90CAF9"
+        android:textSize="12sp"
+        android:text="Stock: 0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

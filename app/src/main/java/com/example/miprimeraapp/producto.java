@@ -7,28 +7,28 @@ public class producto {
     private String descripcion;
     private String marca;
     private String presentacion;
-    private String precio;
+    private double costo;
+    private double precio;
+    private double ganancia;
+    private int stock;
     private String foto;
 
-    // Nuevos campos
-    private String costo;
-    private int stock;
-
     public producto(String idProducto, String codigo, String descripcion, String marca,
-                    String presentacion, String precio, String foto,
-                    String costo, int stock) {
+                    String presentacion, double costo, double precio, int stock, String foto) {
+
         this.idProducto = idProducto;
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.marca = marca;
         this.presentacion = presentacion;
-        this.precio = precio;
-        this.foto = foto;
         this.costo = costo;
+        this.precio = precio;
         this.stock = stock;
+        this.foto = foto;
+
+        this.ganancia = calcularGananciaPorcentaje();
     }
 
-    // Getters y Setters
     public String getIdProducto() { return idProducto; }
     public void setIdProducto(String idProducto) { this.idProducto = idProducto; }
 
@@ -44,30 +44,32 @@ public class producto {
     public String getPresentacion() { return presentacion; }
     public void setPresentacion(String presentacion) { this.presentacion = presentacion; }
 
-    public String getPrecio() { return precio; }
-    public void setPrecio(String precio) { this.precio = precio; }
+    public double getCosto() { return costo; }
+    public void setCosto(double costo) {
+        this.costo = costo;
+        this.ganancia = calcularGananciaPorcentaje();
+    }
 
-    public String getFoto() { return foto; }
-    public void setFoto(String foto) { this.foto = foto; }
+    public double getPrecio() { return precio; }
+    public void setPrecio(double precio) {
+        this.precio = precio;
+        this.ganancia = calcularGananciaPorcentaje();
+    }
 
-    public String getCosto() { return costo; }
-    public void setCosto(String costo) { this.costo = costo; }
+    public double getGanancia() { return ganancia; }
 
     public int getStock() { return stock; }
     public void setStock(int stock) { this.stock = stock; }
 
-    // Método para calcular porcentaje de ganancia
+    public String getFoto() { return foto; }
+    public void setFoto(String foto) { this.foto = foto; }
+
     public double calcularGananciaPorcentaje() {
-        try {
-            double costoDouble = Double.parseDouble(costo);
-            double precioDouble = Double.parseDouble(precio);
-            if (costoDouble > 0) {
-                return ((precioDouble - costoDouble) / costoDouble) * 100;
-            }
-        } catch (NumberFormatException e) {
-            return 0.0;
+        if (costo > 0) {
+            return ((precio - costo) / costo) * 100;
         }
         return 0.0;
     }
 }
+
 

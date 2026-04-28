@@ -1,13 +1,17 @@
 package com.example.miprimeraapp;
 
-import java.util.Base64;
+import android.util.Base64;
 
 public class utilidades {
-    static String url_consulta = "http://192.168.56.1:5984/dbamigos/_design/dbamigos/_view/dbamigos";
-    static String url_mto = "http://192.168.56.1:5984/dbamigos"; //CRUD, Insertar, Actualizar, Borrar, y Buscar
+
+    static String url_consulta = "http://192.168.1.4:5984/karen/_all_docs?include_docs=true";
+    static String url_mto = "http://192.168.1.4:5984/karen";
+
     static String user = "Karen";
     static String passwd = "karen10";
-    static String credencialesCodificadas = Base64.getEncoder().encodeToString((user +":"+ passwd).getBytes());
+
+    static String credencialesCodificadas = Base64.encodeToString((user + ":" + passwd).getBytes(), Base64.NO_WRAP);
+
     public String generarUnicoId(){
         return java.util.UUID.randomUUID().toString();
     }
