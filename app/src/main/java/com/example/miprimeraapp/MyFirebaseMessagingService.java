@@ -13,10 +13,10 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.ugb.miprimeraapp.R;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyAndroidFCMservice";
@@ -73,6 +73,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("to", remoteMessage.getData().get("para"));
         intent.putExtra("from", remoteMessage.getData().get("de"));
         intent.putExtra("user", remoteMessage.getData().get("user"));
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        //LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 }

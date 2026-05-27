@@ -1,4 +1,5 @@
 package com.example.miprimeraapp;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ugb.miprimeraapp.R;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -113,8 +115,8 @@ public class MainActivity extends Activity {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
     private void abrirVentana(){
-        /*Intent intent = new Intent(this, lista_amigos.class);
-        startActivity(intent);*/
+        Intent intent = new Intent(this, lista_amigos.class);
+        startActivity(intent);
     }
     private void guardarAmigo() {
         try {
