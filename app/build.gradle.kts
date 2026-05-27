@@ -40,6 +40,8 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation("com.google.firebase:firebase-database:22.0.1")
+    implementation("com.google.firebase:firebase-messaging:25.0.2")
+    implementation("com.google.firebase:firebase-storage:22.0.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -48,5 +50,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-database"))
     implementation(platform("com.google.firebase:firebase-messaging"))
     implementation(platform("com.google.firebase:firebase-storage"))
-    implementation(platform("com.firebaseui:firebase-ui-storage:9.0.0"))
+    //implementation(platform("com.firebaseui:firebase-ui-storage:9.0.0"))
 }
