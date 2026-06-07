@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFF8E1"> <!-- Fondo lavanda suave -->
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--                 HEADER                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_fondo_divertido"
+        android:paddingBottom="16dp"
+        android:paddingTop="4dp">
+
+        <!-- TOP ROW -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="14dp"
+            android:gravity="center_vertical">
+
+            <!-- ICONO DINOSAURIO -->
+            <ImageView
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:src="@drawable/dinosaurio"
+                android:scaleType="fitCenter"
+                android:background="@drawable/bg_card_fun"
+                android:padding="10dp"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Icono Dinosaurio"
+                android:elevation="4dp"/>
+
+            <!-- TÍTULOS -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mis Emociones"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="24sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Descubre cómo te sentiste"
+                    android:textColor="#E8D5FF"
+                    android:textSize="12sp"
+                    android:layout_marginTop="3dp"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/btnSalir"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/bg_circle_purple"
+                android:gravity="center"
+                android:elevation="6dp">
+
+                <TextView
+                    android:id="@+id/btnCerrar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="✖"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/bg_circle_purple" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- BADGES -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:gravity="start">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input_purple"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📊  Estadísticas"
+                    android:textColor="#B388FF"
+                    android:textStyle="bold"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input_purple"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="😊  Emociones"
+                    android:textColor="#B388FF"
+                    android:textStyle="bold"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--               CONTENIDO                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_input_round"
+                android:backgroundTint="#F3E9FF"
+                android:padding="18dp"
+                android:layout_marginBottom="14dp"
+                android:elevation="3dp">
+
+                <!-- Encabezado tarjeta -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/nino"
+                        android:background="@drawable/bg_circle_purple"
+                        android:padding="7dp"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="Icono Niño"/>
+
+                    <!-- Se cambia el color de texto a un morado oscuro/medio para que resalte en el fondo claro -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estado emocional"
+                        android:textColor="#6200EE"
+                        android:textStyle="bold"
+                        android:textSize="17sp"/>
+
+                </LinearLayout>
+
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_input_round"
+                        android:backgroundTint="#E8D5FF"
+                        android:padding="18dp"
+                        android:layout_marginBottom="14dp"
+                        android:elevation="3dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Objetivo de hoy"
+                        android:textStyle="bold"
+                        android:textColor="#7C4DFF"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Haz algo que te haga sentir orgulloso antes de terminar el día."
+                        android:textColor="#4A3B66"
+                        android:textSize="15sp"
+                        android:layout_marginTop="8dp"/>
+
+                </LinearLayout>
+
+                <!-- Label estado (Corregido de #FFFFFF a morado oscuro para que sea legible en el fondo claro) -->
+                <TextView
+                    android:id="@+id/txtEstado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="¡Me siento feliz hoy!"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#311B92"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Barra de progreso -->
+                <ProgressBar
+                    android:id="@+id/progressEmocion"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:max="100"
+                    android:progress="72"/>
+
+                <!-- Porcentaje -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="12dp">
+
+                    <!-- Morado vibrante en vez de amarillo para mejor visibilidad aquí -->
+                    <TextView
+                        android:id="@+id/txtPorcentaje"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="72%"
+                        android:textColor="#6200EE"
+                        android:textStyle="bold"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" de bienestar"
+                        android:textColor="#7C4DFF"
+                        android:textStyle="bold"
+                        android:textSize="13sp"
+                        android:layout_gravity="bottom"
+                        android:paddingBottom="3dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ─────────────────────────────── -->
+            <!--       TARJETA RESUMEN (OSCURA)  -->
+            <!-- ─────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_input_round"
+                android:padding="18dp"
+                android:layout_marginBottom="14dp"
+                android:elevation="3dp">
+
+                <!-- Encabezado tarjeta -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/dibujo"
+                        android:background="@drawable/bg_circle_purple"
+                        android:padding="7dp"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="Icono Dibujo"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Resumen emocional"
+                        android:textColor="#FFD600"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:shadowColor="#33000000"
+                        android:shadowDx="0"
+                        android:shadowDy="1"
+                        android:shadowRadius="2"/>
+
+                </LinearLayout>
+
+                <!-- Texto resumen (Aquí sí es blanco porque el fondo es el oscuro original) -->
+                <TextView
+                    android:id="@+id/txtResumen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="¡Has tenido un día excelente lleno de energía positiva! Sigue así."
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:lineSpacingMultiplier="1.4"/>
+
+            </LinearLayout>
+
+            <!-- ─────────────────────────────── -->
+            <!--           HINT                  -->
+            <!-- ─────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input_purple"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="★  "
+                    android:textColor="#FFD600"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Las emociones se calculan automáticamente"
+                    android:textColor="#B388FF"
+                    android:textStyle="bold"
+                    android:textSize="11sp"/>
+
+            </LinearLayout>
+
+            <!-- ─────────────────────────────── -->
+            <!--       BOTÓN ENVIAR ALERTA       -->
+            <!-- ─────────────────────────────── -->
+            <LinearLayout
+                android:id="@+id/btnEnviarCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:background="@drawable/bg_button_fun"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:elevation="8dp"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_circle_purple"
+                    android:gravity="center"
+                    android:layout_marginEnd="14dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_dialog_email"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="Icono Correo"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enviar alerta"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Avisar al padre o tutor"
+                        android:textColor="#E8D5FF"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:alpha="0.8"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

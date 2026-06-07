@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/bg_fondo_divertido">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:background="@drawable/bg_card_fun"
+        android:elevation="10dp"
+        android:gravity="center">
+
+
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@drawable/dinosaurio"
+            android:layout_marginBottom="15dp"
+            android:scaleType="centerCrop"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mundo Capsula"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#4A148C"
+            android:layout_marginBottom="5dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¡Guarda tus aventuras!"
+            android:textColor="#7B1FA2"
+            android:textSize="14sp"
+            android:layout_marginBottom="20dp"/>
+
+
+        <EditText
+            android:id="@+id/txtUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:hint="Usuario"
+            android:textColor="#000000"
+            android:textColorHint="#666"
+            android:background="@drawable/bg_input_fun"
+            android:padding="15dp"
+            android:layout_marginBottom="12dp"/>
+
+
+        <EditText
+            android:id="@+id/txtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:textColorHint="#666"
+            android:background="@drawable/bg_input_fun"
+            android:padding="15dp"
+            android:layout_marginBottom="18dp"/>
+
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="¡Entrar!"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#666"
+            android:background="@drawable/bg_input_fun"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿No tienes cuenta?"
+            android:textColor="#7B1FA2"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnIrRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Crear cuenta"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#8E24AA"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
